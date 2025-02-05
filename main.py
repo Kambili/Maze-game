@@ -84,8 +84,16 @@ current_cell = grid_cells[0]
 current_cell.visited = True
 stack = []
 
-# Generate maze
-while True:
+# Animated maze generation
+running = True
+while running:
+    DISPLAYSURF.fill(BLUE)
+    for cell in grid_cells:
+        cell.draw()
+    pygame.draw.rect(DISPLAYSURF, RED, (current_cell.x * TILE + 2, current_cell.y * TILE + 2, TILE - 4, TILE - 4))
+    pygame.display.flip()
+    clock.tick(120)
+
     next_cell = current_cell.check_neighbours()
     if next_cell:
         next_cell.visited = True
@@ -95,15 +103,14 @@ while True:
     elif stack:
         current_cell = stack.pop()
     else:
-        break
-
+        running = False
+        
 # Make the first row completely open
 for col in range(cols):
-    grid_cells[col].walls['top'] = False  # Remove top wall
     grid_cells[col].walls['left'] = False  # Remove left wall
     grid_cells[col].walls['right'] = False  # Remove right wall
     # Do NOT remove the bottom wall to prevent skipping rows
-
+    
 # Set random start position in the first row
 player_x = randint(0, cols - 1)
 player_y = 0
