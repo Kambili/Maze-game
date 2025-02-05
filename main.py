@@ -140,6 +140,9 @@ def move_player(dx, dy):
         player_y += 1
 
 
+# Set the game timer (3 minutes)
+start_time = pygame.time.get_ticks()
+
 # Main game loop
 running = True
 while running:
@@ -148,6 +151,15 @@ while running:
         cell.draw()
     pygame.draw.rect(DISPLAYSURF, GREEN, (player_x * TILE + 5, player_y * TILE + 5, TILE - 10, TILE - 10))
     pygame.draw.rect(DISPLAYSURF, RED, (exit_x * TILE + 5, exit_y * TILE + 5, TILE - 10, TILE - 10))
+
+    # Calculate elapsed time
+    elapsed_time = pygame.time.get_ticks() - start_time
+    remaining_time = max(180000 - elapsed_time, 0)  # Remaining time in milliseconds
+
+    # Display timer on screen
+    font = pygame.font.Font(None, 36)
+    timer_text = font.render(f"Time Left: {remaining_time // 1000}s", True, WHITE)
+    DISPLAYSURF.blit(timer_text, (WIDTH - 200, 10))
 
     for event in pygame.event.get():
         if event.type == QUIT:
@@ -165,6 +177,11 @@ while running:
     # Check if player reached the exit
     if player_x == exit_x and player_y == exit_y:
         print("You Win!")
+        running = False
+
+    # Check if time has run out
+    if elapsed_time > 180000:  # 180 seconds (3 minutes)
+        print("You Lose! Time is up.")
         running = False
 
     pygame.display.flip()
