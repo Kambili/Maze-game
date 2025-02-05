@@ -121,16 +121,24 @@ exit_y = rows - 1
 
 def move_player(dx, dy):
     global player_x, player_y
-    next_cell = grid_cells[player_x + dx + (player_y + dy) * cols]
+    next_x, next_y = player_x + dx, player_y + dy
+
+    # Ensure the player stays within the grid boundaries
+    if next_x < 0 or next_x >= cols or next_y < 0 or next_y >= rows:
+        return  # Stop movement if it's out of bounds
+
+    next_cell = grid_cells[next_x + next_y * cols]
     current_cell = grid_cells[player_x + player_y * cols]
+
     if dx == -1 and not current_cell.walls['left']:
         player_x -= 1
     elif dx == 1 and not current_cell.walls['right']:
         player_x += 1
     elif dy == -1 and not current_cell.walls['top']:
         player_y -= 1
-    elif dy == 1 and not current_cell.walls['bottom']:
+    elif dy == 1 and not current_cell.walls['bottom'] and player_y < rows - 1:
         player_y += 1
+
 
 # Main game loop
 running = True
